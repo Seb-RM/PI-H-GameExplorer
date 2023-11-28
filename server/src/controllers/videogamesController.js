@@ -1,5 +1,5 @@
 
-import { VideoGame } from "../models/videogamesModel.js";
+import { VideoGame } from "../models/videogameModel.js";
 
 // Obtener todos los videojuegos
 export const getVideoGames = async (req, res) => {
