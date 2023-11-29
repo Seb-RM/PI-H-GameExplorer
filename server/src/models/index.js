@@ -1,6 +1,6 @@
 //models/index.js
-// import Genre from "./genreModel.js";
-// import Platform from "./platformModel.js";
+import Genre from "./genreModel.js";
+import Platform from "./platformModel.js";
 // import VideoGame from "./videogameModel.js";
 
 
@@ -24,4 +24,4 @@
 //     timestamps: false,
 // });
 
-// export { VideoGame, Genre, Platform };
+export {  Genre, Platform };

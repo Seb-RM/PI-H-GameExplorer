@@ -1,8 +1,7 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import dotenv from "dotenv";
-// import routes from "./routes/index.js"
+import routes from "./routes/index.js"
 
 
 const server= express();
@@ -10,7 +9,7 @@ const server= express();
 server.use(morgan("dev"))
 server.use(cors());
 server.use(express.json());
-// server.use("/", routes);
+server.use("/", routes);
 
 server.use((err, req, res, next) => {
     console.error(err.stack);
