@@ -1,9 +1,9 @@
 // routes/platformRoutes.js
 import express from "express";
-import { getPlatforms } from "../controllers/platformController.js";
+import getPlatforms from "../controllers/platformsController.js";
 
 const router = express.Router();
 
-router.get("/platforms", getPlatforms);
+router.get("/", getPlatforms);
 
 export default router;

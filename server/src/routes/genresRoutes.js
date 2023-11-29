@@ -1,9 +1,9 @@
 // routes/genreRoutes.js
-import express from "express";
-import { getGenres } from "../controllers/genreController.js";
+// import express from "express";
+// import { getGenres } from "../controllers/genresController.js";
 
-const router = express.Router();
+// const router = express.Router();
 
-router.get("/genres", getGenres);
+// router.get("/genres", getGenres);
 
-export default router;
+// export default router;

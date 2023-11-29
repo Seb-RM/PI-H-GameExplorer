@@ -1,10 +1,10 @@
 import { Sequelize } from "sequelize";
 
-export const createDatabaseConnection = () => {
-    const { DB_USER, DB_PASSWORD, DB_HOST } = process.env;
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
 
-    return new Sequelize(
-    `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/videogames`,
-    { login: true }
+const sequelize = new Sequelize(
+      `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
+      // { logging: false }
     );
-};
+
+export default sequelize;
