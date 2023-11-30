@@ -24,13 +24,14 @@ const getPlatforms = async (req, res, next) => {
             await Platform.bulkCreate(platformsFromApi);
 
             res.json(platformsFromApi);
-            
+
         } else {
         // Si ya hay plataformas en la base de datos, devolverlas
         res.json(existingPlatforms);
         }
     } catch (error) {
-        next(error);
+            console.error(error);
+            res.status(500).json({ error: "Error al obtener las plataformas." });
     }
 };
 

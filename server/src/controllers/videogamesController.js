@@ -1,88 +1,137 @@
-// // controllers/videogameController.js
-// import axios from "axios";
-// import { Videogame, Genre, Platform } from "../models/index.js";
-// import { Op } from "sequelize";
-// import "dotenv/config";
+// controllers/videogameController.js
+import axios from "axios";
+import { Genre, Platform, VideoGame } from "../models/index.js";
+import { Op } from "sequelize";
+import "dotenv/config";
 
-// const getVideogames = async (req, res, next) => {
-//     try {
-//         // Obtener videojuegos de la base de datos
-//         const videogamesFromDB = await Videogame.findAll({
-//         include: [Genre, Platform], // Incluir información de géneros y plataformas asociadas
-//         });
+const getVideogames = async (req, res, next) => {
+    try {
+      // Obtener videojuegos de la base de datos
+        const existingVideogames = await VideoGame.findAll({
+            include: [Genre, Platform], // Incluir información de géneros y plataformas asociadas
+        });
 
-//         // Obtener videojuegos de la API
-//         const { API_KEY } = process.env;
-//         const response = await axios.get(
-//             `https://api.rawg.io/api/games?api_key=${API_KEY}`
-//         );
-//         const videogamesFromAPI = response.data.results;
+        // Obtener videojuegos de la API
+        const { API_KEY } = process.env;
+        const apiResponse = await axios.get(
+            `https://api.rawg.io/api/games?key=${API_KEY}`
+        );
+        const videogamesFromAPI = apiResponse.data.results.map(
+            (videogameFromAPI) => ({
+                apiId: videogameFromAPI.id,
+                name: videogameFromAPI.name,
+                image: videogameFromAPI.background_image,
+                releaseDate: videogameFromAPI.released,
+                rating: videogameFromAPI.rating,
+                description: videogameFromAPI.description_raw,
+                platforms: videogameFromAPI.platforms.map((platform) => platform.platform.name),
+                genres: videogameFromAPI.genres.map((genre) => genre.name),
+            })
+        );
+        // Combinar videojuegos de la base de datos y la API
+        const allVideogames = [...existingVideogames, ...videogamesFromAPI];
 
-//         // Combinar videojuegos de la base de datos y la API
-//         const allVideogames = [...videogamesFromDB, ...videogamesFromAPI];
+        res.json(allVideogames);
+    } catch (error) {
+        next(error);
+    }
+};
 
-//         res.json(allVideogames);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+const getVideogameById = async (req, res, next) => {
 
-// const getVideogameById = async (req, res, next) => {
-//     const { idVideogame } = req.params;
+    try {
+        const { idVideogame } = req.params;
 
-//     try {
-//         // Obtener detalle del videojuego de la base de datos
-//         const videogameFromDB = await Videogame.findByPk(idVideogame, {
-//         include: [Genre, Platform], // Incluir información de géneros y plataformas asociadas
-//         });
+        // Controlar si la ID es un UUID
+        const isUUID = idVideogame.match(
+        /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/
+        );
 
-//         if (videogameFromDB) {
-//         res.json(videogameFromDB);
-//         } else {
-//         // Si no se encuentra en la base de datos, buscar en la API
-//         const { API_KEY } = process.env;
-//         const response = await axios.get(
-//             `https://api.rawg.io/api/games/${idVideogame}?api_key=${API_KEY}`
-//         );
-//         const videogameFromAPI = response.data;
+        if (isUUID) {
+        // Buscar en la base de datos
+        const existingVideogame = await VideoGame.findByPk(idVideogame, {
+            include: [Genre, Platform],
+        });
 
-//         res.json(videogameFromAPI);
-//         }
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+        if (existingVideogame) {
+            res.json(existingVideogame);
+        } else {
+            res
+            .status(404)
+            .json({ message: "Video juego no encontrado en la base de datos." });
+        }
+        } else {
+        // Si no se encuentra en la base de datos, buscar en la API
+            const { API_KEY } = process.env;
+            const apiResponse = await axios.get(
+                `https://api.rawg.io/api/games/${idVideogame}?key=${API_KEY}`
+            );
 
-// const getVideogamesByName = async (req, res, next) => {
-//     const { name } = req.query;
+            const videogameFromAPI = apiResponse.data;
 
-//     try {
-//         // Buscar videojuegos por nombre en la base de datos
-//         const videogamesFromDB = await Videogame.findAll({
-//         where: {
-//             name: {
-//             [Op.iLike]: `%${name}%`, // Búsqueda sin importar mayúsculas o minúsculas
-//             },
-//         },
-//         include: [Genre, Platform], // Incluir información de géneros y plataformas asociadas
-//         });
+            const processedVideogame = {
+                apiId: videogameFromAPI.id,
+                name: videogameFromAPI.name,
+                image: videogameFromAPI.background_image,
+                releaseDate: videogameFromAPI.released,
+                rating: videogameFromAPI.rating,
+                description: videogameFromAPI.description_raw,
+                platforms: videogameFromAPI.platforms.map((platform) => platform.platform.name),
+                genres: videogameFromAPI.genres.map((genre) => genre.name),
+            };
 
-//         if (videogamesFromDB.length > 0) {
-//         res.json(videogamesFromDB);
-//         } else {
-//         // Si no se encuentra en la base de datos, buscar en la API
-//         const { API_KEY } = process.env;
-//         const response = await axios.get(
-//             `https://api.rawg.io/api/games?search=${name}&api_key=${API_KEY}`
-//         );
-//         const videogamesFromAPI = response.data.results;
+            res.json(processedVideogame);
+        };
+    } catch (error) {
+            console.error("Error en getVideogameById:", error);
+            res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
 
-//         res.json(videogamesFromAPI.slice(0, 15));
-//         }
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+const getVideogamesByName = async (req, res, next) => {
+    
+    try {
+        const { name } = req.query; 
+        // Buscar videojuegos por nombre en la base de datos
+        const existingVideogames = await VideoGame.findAll({
+            where: {
+                name: {
+                    [Op.iLike]: `%${name}%`, // Búsqueda sin importar mayúsculas o minúsculas
+                },
+            },
+            include: [Genre, Platform], // Incluir información de géneros y plataformas asociadas
+            limit: 15, // Limitar a 15 resultados
+        });
+
+        const { API_KEY } = process.env;
+        const apiResponse = await axios.get(
+            `https://api.rawg.io/api/games?search=${name}&key=${API_KEY}&page_size=15`
+        );
+        const videogamesFromAPI = apiResponse.data.results.map(
+            (videogameFromAPI) => ({
+                apiId: videogameFromAPI.id,
+                name: videogameFromAPI.name,
+                image: videogameFromAPI.background_image,
+                releaseDate: videogameFromAPI.released,
+                rating: videogameFromAPI.rating,
+                description: videogameFromAPI.description_raw,
+                platforms: videogameFromAPI.platforms.map((platform) => platform.platform.name),
+                genres: videogameFromAPI.genres.map((genre) => genre.name),
+            })
+        );
+        
+        const combinedResults = [...existingVideogames, ...videogamesFromAPI].slice(0, 15);
+
+        if (combinedResults.length === 0) {
+            res.json({ message: "No se encontraron juegos con ese nombre." });
+        } else {
+            res.json(combinedResults);
+        }
+
+    } catch (error) {
+        next(error);
+    }
+};
 
 // const createVideogame = async (req, res, next) => {
 //     const {
@@ -137,9 +186,9 @@
 //     }
 // };
 
-// export {
-//     getVideogames,
-//     getVideogameById,
-//     getVideogamesByName,
-//     createVideogame,
-// };
+export {
+    getVideogames,
+    getVideogameById,
+    getVideogamesByName,
+    // createVideogame,
+};
