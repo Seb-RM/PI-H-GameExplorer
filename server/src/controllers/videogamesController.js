@@ -133,62 +133,85 @@ const getVideogamesByName = async (req, res, next) => {
     }
 };
 
-// const createVideogame = async (req, res, next) => {
-//     const {
-//         name,
-//         description,
-//         image,
-//         releaseDate,
-//         rating,
-//         genres, // Lista de IDs de géneros asociados
-//         platforms, // Lista de IDs de plataformas asociadas
-//     } = req.body;
+const createVideogame = async (req, res, next) => {
 
-//     try {
-//         // Crear el videojuego en la base de datos
-//         const newVideogame = await Videogame.create({
-//         name,
-//         description,
-//         image,
-//         releaseDate,
-//         rating,
-//         });
+    try {
+        const {
+            name,
+            description,
+            image,
+            releaseDate,
+            rating,
+            genres, // Lista de IDs de géneros asociados
+            platforms, // Lista de IDs de plataformas asociadas
+        } = req.body;
 
-//         // Asociar géneros al videojuego
-//         if (genres && genres.length > 0) {
-//         const genresToAdd = await Genre.findAll({
-//             where: {
-//             id: {
-//                 [Op.in]: genres,
-//             },
-//             },
-//         });
+        // Validar que los datos necesarios estén presentes
+        if (
+            !name ||
+            !description ||
+            !image ||
+            !releaseDate ||
+            !rating ||
+            !genres ||
+            !platforms
+        ) {
+            return res
+            .status(400)
+            .json({ message: "Todos los campos son obligatorios." });
+        }
 
-//         await newVideogame.addGenres(genresToAdd);
-//         }
+        // Validar que genres y platforms sean arreglos con al menos un elemento
+        if (
+            !Array.isArray(genres) ||
+            genres.length === 0 ||
+            !Array.isArray(platforms) ||
+            platforms.length === 0
+        ) {
+            return res.status(400).json({
+            message: "Se debe proporcionar al menos un género y una plataforma.",
+            });
+        }
 
-//         // Asociar plataformas al videojuego
-//         if (platforms && platforms.length > 0) {
-//         const platformsToAdd = await Platform.findAll({
-//             where: {
-//             id: {
-//                 [Op.in]: platforms,
-//             },
-//             },
-//         });
+        // Verificar si los géneros y plataformas proporcionados existen en la base de datos
+        const existingGenres = await Genre.findAll({ where: { name: genres } });
+        const existingPlatforms = await Platform.findAll({
+            where: { name: platforms },
+        });
 
-//         await newVideogame.addPlatforms(platformsToAdd);
-//         }
+        // Validar que todos los géneros y plataformas proporcionados existan
+        if (
+            existingGenres.length !== genres.length ||
+            existingPlatforms.length !== platforms.length
+        ) {
+            return res.status(400).json({
+            message:
+                "Alguno de los géneros o plataformas proporcionados no existe.",
+            });
+        }
 
-//         res.status(201).json(newVideogame);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+        // Crear el videojuego en la base de datos
+        const newVideogame = await VideoGame.create({
+            name,
+            description,
+            image,
+            releaseDate,
+            rating,
+        });
+
+        // Relacionar el videojuego con sus géneros y plataformas
+        await newVideogame.addGenres(existingGenres);
+        await newVideogame.addPlatforms(existingPlatforms);
+        
+        res.status(201).json(newVideogame);
+    } catch (error) {
+            next(error);
+    }
+};
 
 export {
     getVideogames,
     getVideogameById,
     getVideogamesByName,
-    // createVideogame,
+    createVideogame,
 };
