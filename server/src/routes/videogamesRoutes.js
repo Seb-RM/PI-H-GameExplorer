@@ -11,7 +11,7 @@ router.get("/", getVideogames);
 router.get("/:idVideogame", getVideogameById);
 
 // GET | /videogames/name?="..."
-router.get("/name/search", getVideogamesByName);
+router.get("/search/name", getVideogamesByName);
 
 // POST | /videogames
 router.post("/", createVideogame);

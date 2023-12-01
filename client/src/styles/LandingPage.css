@@ -1,0 +1,27 @@
+.landing-page {
+    text-align: center;
+    padding: 20px;
+}
+
+.marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    border: 1px solid #ccc;
+    margin: 0 auto;
+    padding: 10px;
+    width: 80%;
+}
+
+.marquee span {
+    display: inline-block;
+    animation: marqueeAnimation 10s linear infinite;
+}
+
+@keyframes marqueeAnimation {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
