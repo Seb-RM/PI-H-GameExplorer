@@ -1,20 +1,47 @@
+@font-face{
+    font-family:  Silkscreen;
+    src: url('../assets/fonts/Silkscreen-Regular.ttf');
+}
+@font-face{
+    font-family:  SpaceMono;
+    src: url('../assets/fonts/SpaceMono-Regular.ttf');
+}
+@font-face{
+    font-family:  PressStart;
+    src: url('../assets/fonts/PressStart2P-Regular.ttf');
+}
+
+
 .landing-page {
     text-align: center;
     padding: 20px;
+    background-color: #ADE4DB;
+    min-height: 100vh;
+    color: #04364A;
 }
 
 .marquee {
     overflow: hidden;
     white-space: nowrap;
-    border: 1px solid #ccc;
+    border: 5px solid #577D86;
     margin: 0 auto;
     padding: 10px;
-    width: 80%;
+    width: 90%;
+    height: 70vh;
+    background-color: #87CBB9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 10px 10px 5px 0px #071952;
+    -webkit-box-shadow: 10px 10px 5px 0px #071952;
+    -moz-box-shadow: 10px 10px 5px 0px #071952;
 }
 
 .marquee span {
     display: inline-block;
-    animation: marqueeAnimation 10s linear infinite;
+    animation: marqueeAnimation 15s linear infinite;
+    font-family: Silkscreen;
+    font-size: 5rem;
 }
 
 @keyframes marqueeAnimation {
@@ -24,4 +51,68 @@
   100% {
     transform: translateX(-100%);
   }
+}
+
+.message {
+  margin: 20px 0 15px ;
+  font-family: SpaceMono;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.button {
+  display: inline-block;
+  font-size: 1.2rem;
+  padding: 8px 12px;
+  font-family: 'PressStart', sans-serif;
+  cursor: pointer;
+  background-color: #9AD0C2;
+  position: relative;
+  overflow: hidden;
+  border: none;
+}
+
+.button::before,
+.button::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  transition: 1s;
+}
+
+.button::before {
+  top: 0;
+  left: 0;
+  border-top: 2px solid #ff0;
+  border-left: 2px solid #ff0;
+  transform: scaleX(0) scaleY(0);
+  transform-origin: top left;
+}
+
+.button::after {
+  bottom: 0;
+  right: 0;
+  border-bottom: 2px solid #ff0;
+  border-right: 2px solid #ff0;
+  transform: scaleX(0) scaleY(0);
+  transform-origin: bottom right;
+}
+
+.button:hover::before,
+.button:hover::after {
+  transform: scaleX(1) scaleY(1);
+}
+
+/* Estilo del texto dentro del botón */
+.button span {
+  position: relative;
+  z-index: 1;
+}
+
+.button:hover span::before,
+.button:hover span::after {
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
 }
