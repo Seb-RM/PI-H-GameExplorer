@@ -7,13 +7,18 @@ const LandingPage = () => {
     return (
         <section className="landing-page">
             <div className="marquee">
-                <span>Bienvenidos a Game Explorer</span>
+                <div className="marquee__group">
+                    <span>/ Gracias por visitar Game Explorer /</span>
+                </div>
+                <div className="marquee__group" aria-hidden="true">
+                    <span>/ Gracias por visitar Game Explorer /</span>
+                </div>
             </div>
-            <p className="message">Haz clic para continuar</p>
-            <Link>
-                <button className="button">
-                    <span></span>Continuar
-                </button>
+            <p className="message">Haz clic para</p>
+            <Link to="/home">
+            <button className="button">
+                <span className="span"></span>Continuar
+            </button>
             </Link>
         </section>
     );
