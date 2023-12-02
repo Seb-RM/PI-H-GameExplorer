@@ -1,4 +1,3 @@
-// controllers/videogameController.js
 import axios from "axios";
 import { Genre, Platform, VideoGame } from "../models/index.js";
 import { Op } from "sequelize";
@@ -21,16 +20,21 @@ const getVideogames = async (req, res, next) => {
                 apiId: videogameFromAPI.id,
                 name: videogameFromAPI.name,
                 image: videogameFromAPI.background_image,
-                releaseDate: videogameFromAPI.released,
-                rating: videogameFromAPI.rating,
-                description: videogameFromAPI.description_raw,
-                platforms: videogameFromAPI.platforms.map((platform) => platform.platform.name),
+                // releaseDate: videogameFromAPI.released,
+                // rating: videogameFromAPI.rating,
+                // description: videogameFromAPI.description_raw,
+                // platforms: videogameFromAPI.platforms.map((platform) => platform.platform.name),
                 genres: videogameFromAPI.genres.map((genre) => genre.name),
             })
         );
         // Combinar videojuegos de la base de datos y la API
         const allVideogames = [...existingVideogames, ...videogamesFromAPI];
 
+        if (allVideogames.length === 0) {
+            // Manejar el caso donde no hay videojuegos
+            return res.json([]);
+        }
+        
         res.json(allVideogames);
     } catch (error) {
         next(error);

@@ -1,0 +1,38 @@
+.game-card {
+  /* Establece estilos para las tarjetas de juego */
+    margin: 10px;
+    padding: 20px;
+    width: 85vw;
+    max-width: 350px;
+    border: 5px solid #183D3D;
+    text-align: center;
+    box-shadow: 5px 5px 5px 0 #93B1A6;
+    overflow: hidden;
+    background-color: #B9B4C7;
+}
+
+/* Puedes ajustar la altura según tus preferencias */
+.game-card img {
+    max-height: 150px; /* Establece una altura máxima para las imágenes */
+    max-width: 300px;
+}
+
+.game-card ul {
+    list-style: none;
+}
+
+.game-card button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .game-card {
+        margin: 10px;
+        padding: 20px;
+        max-width: 400px;
+        height: 270px;
+        min-height: 270px;
+    }
+}

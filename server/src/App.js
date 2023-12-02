@@ -13,7 +13,7 @@ server.use("/", routes);
 
 server.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send("¡Algo salió mal!");
+    res.status(500).json({ error: "¡Algo salió mal!" });
 }); 
 
 server.use((req, res, next) => {

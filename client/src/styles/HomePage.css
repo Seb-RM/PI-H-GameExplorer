@@ -1,6 +1,33 @@
 .container {
     width: 100vw;
-    height: 100vh;
+    height: auto;
     background-color: #726A95;
 }
 
+.cardsContainer {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column; /* Establece la dirección como columna para un diseño vertical */
+    align-items: center; /* Centra los elementos horizontalmente */
+    flex-wrap: wrap; /* Ajusta las tarjetas al ancho del contenedor */
+    justify-content: space-around; /* Espaciado uniforme entre las tarjetas */
+}
+
+@media (min-width: 768px) {
+    .container {
+        width: 100%;
+        height: auto;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .cardsContainer{
+        display: grid;
+        padding: 20px 30px;
+        grid-template-columns: repeat(3, 1fr);; /* Tres columnas con ancho mínimo de 250px */
+        gap: 20px; /* Espaciado entre las tarjetas */
+        justify-content: space-evenly;
+        border: 3px solid black;
+    }
+}

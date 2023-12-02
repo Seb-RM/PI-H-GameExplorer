@@ -1,27 +1,33 @@
-// videoGameActions.js
-import * as actionTypes from ".//actions-types.js";
+import axios from "axios";
+import {
+    FETCH_VIDEO_GAMES_SUCCESS,
+    FETCH_VIDEO_GAMES_FAILURE,
+    FILTER_BY_GENRE,
+    ORDER_BY,
+    PAGINATE,
+} from "./actions-types.js";
 
 export const fetchVideoGames = () => async (dispatch) => {
     try {
-        const response = await fetch("/videogames");
-        const data = await response.json();
-        dispatch({ type: actionTypes.FETCH_VIDEO_GAMES_SUCCESS, payload: data });
+        const response = await axios.get("http://localhost:3001/videogames");
+        console.log("API Data:", response.data);
+        dispatch({ type: FETCH_VIDEO_GAMES_SUCCESS, payload: response.data });
     } catch (error) {
         dispatch({
-        type: actionTypes.FETCH_VIDEO_GAMES_FAILURE,
+        type: FETCH_VIDEO_GAMES_FAILURE,
         payload: error.message,
         });
     }
 };
 
 export const filterByGenre = (genre) => (dispatch) => {
-    dispatch({ type: actionTypes.FILTER_BY_GENRE, payload: genre });
+  dispatch({ type: FILTER_BY_GENRE, payload: genre });
 };
 
 export const orderBy = (sortBy, sortOrder) => (dispatch) => {
-    dispatch({ type: actionTypes.ORDER_BY, payload: { sortBy, sortOrder } });
+  dispatch({ type: ORDER_BY, payload: { sortBy, sortOrder } });
 };
 
 export const paginate = (page) => (dispatch) => {
-    dispatch({ type: actionTypes.PAGINATE, payload: page });
+  dispatch({ type: PAGINATE, payload: page });
 };
