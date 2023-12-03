@@ -1,4 +1,4 @@
-.container {
+.homeContainer {
     width: 100vw;
     height: auto;
     background-color: #726A95;
@@ -14,7 +14,7 @@
 }
 
 @media (min-width: 768px) {
-    .container {
+    .homeContainer {
         width: 100%;
         height: auto;
         padding: 0;

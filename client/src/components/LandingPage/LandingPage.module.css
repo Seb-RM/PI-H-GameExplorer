@@ -12,7 +12,7 @@
 }
 
 
-.landing-page {
+.landingPage {
     text-align: center;
     padding: 20px 30px;
     background-color: #ADE4DB;
@@ -41,7 +41,7 @@
   font-size: 1.5rem;
 }
 
-.button {
+.ladingButton {
   display: inline-block;
   font-size: 1.2rem;
   color: #04364A;
@@ -54,10 +54,10 @@
   border: none;
 }
 
-.button::before,
-.button::after,
-.span::before,
-.span::after  {
+.ladingButton::before,
+.ladingButton::after,
+.ladingSpan::before,
+.ladingSpan::after  {
   content: '';
   position: absolute;
   width: 12px;
@@ -66,47 +66,47 @@
   transition: 1s;
 }
 
-.button::before {
+.ladingButton::before {
   top: 0;
   left: 0;
   border-top: 3px solid #12486B;
   border-left: 3px solid #12486B;
 }
 
-.button::after {
+.ladingButton::after {
   top: 0;
   right: 0;
   border-top: 3px solid #12486B;
   border-right: 3px solid #12486B;
 }
 
-.span::before {
+.ladingSpan::before {
 	bottom: 0;
 	left: 0;
 	border-bottom: 3px solid #12486B;
 	border-left: 3px solid #12486B;
 }
-.span::after {
+.ladingSpan::after {
 	bottom: 0;
 	right: 0;
 	border-bottom: 3px solid #12486B;
 	border-right: 3px solid #12486B;
 }
 
-.button:hover::before,
-.button:hover::after {
+.ladingButton:hover::before,
+.ladingButton:hover::after {
   transform: scaleX(1) scaleY(1);
 }
 
-.button:hover::before,
-.button:hover::after,
-.button:hover span::before,
-.button:hover span::after  {
+.ladingButton:hover::before,
+.ladingButton:hover::after,
+.ladingButton:hover ladingSpan::before,
+.ladingButton:hover ladingSpan::after  {
 	width: calc( 100% - 4px);
 	height: calc( 100% - 4px);
 }
 
-.marquee__group {
+.marqueeGroup {
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -118,7 +118,7 @@
   font-size: 5rem;
 }
 
-.marquee__group span {
+.marqueeGroup span {
   white-space: nowrap;
 }
 

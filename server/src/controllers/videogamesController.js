@@ -17,7 +17,7 @@ const getVideogames = async (req, res, next) => {
         );
         const videogamesFromAPI = apiResponse.data.results.map(
             (videogameFromAPI) => ({
-                apiId: videogameFromAPI.id,
+                id: videogameFromAPI.id,
                 name: videogameFromAPI.name,
                 image: videogameFromAPI.background_image,
                 // releaseDate: videogameFromAPI.released,
@@ -74,13 +74,15 @@ const getVideogameById = async (req, res, next) => {
             const videogameFromAPI = apiResponse.data;
 
             const processedVideogame = {
-                apiId: videogameFromAPI.id,
+                id: videogameFromAPI.id,
                 name: videogameFromAPI.name,
                 image: videogameFromAPI.background_image,
                 releaseDate: videogameFromAPI.released,
                 rating: videogameFromAPI.rating,
                 description: videogameFromAPI.description_raw,
-                platforms: videogameFromAPI.platforms.map((platform) => platform.platform.name),
+                platforms: videogameFromAPI.platforms.map(
+                    (platform) => platform.platform.name
+                ),
                 genres: videogameFromAPI.genres.map((genre) => genre.name),
             };
 

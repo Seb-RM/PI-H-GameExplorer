@@ -8,7 +8,7 @@ const HomePage = () => {
     const dispatch = useDispatch();
     const { videoGames, loading, error } = useSelector(
       (state) => {console.log("State:",state)
-        return state.allStates}
+        return state.gameStates}
     );
       
     useEffect(() => {
@@ -22,9 +22,13 @@ const HomePage = () => {
     if (error) {
       return <p>Error: {error}</p>;
     }
-
+    console.log(videoGames);
+    videoGames.map((game)=>{
+      console.log(game.id);
+    console.log(game.name);
+  console.log(game.genres);})
     return (
-      <div className="container">
+      <div className="homeContainer">
         <nav></nav>
         <main>
           <h1>Main section</h1>
@@ -32,6 +36,7 @@ const HomePage = () => {
             {videoGames.map((game) => (
             <GameCard
               key={game.id} /* Pasa las propiedades del videojuego */
+              id={game.id}
               name={game.name}
               image={game.image}
               genres={game.genres}
