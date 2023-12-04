@@ -29,6 +29,7 @@ img {
 
 @media screen and (min-width: 768px) {
     .detailSection{
+        max-width: 100VW;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-auto-rows: minmax(100px, auto);

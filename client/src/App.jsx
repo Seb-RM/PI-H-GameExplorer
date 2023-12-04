@@ -6,6 +6,7 @@ import LandingPage from "./components/LandingPage/LandingPage.jsx";
 import HomePage from "./components/HomePage.jsx";
 import NotFound from "./components/NotFound";
 import DetailPage from "./components/DetailPage/DetailPage.jsx";
+import GameFormPage from "./components/GameFormPage.jsx";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Route exact path="/" element={<LandingPage />} />
       <Route path="/home" element={<HomePage />} />
       <Route path="/detail/:id" element={<DetailPage />} />
+      <Route path="/gameForm" element={<GameFormPage />} />
       <Route element={<NotFound />} />
     </Routes>
   );

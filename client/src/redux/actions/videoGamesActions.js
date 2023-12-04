@@ -33,6 +33,32 @@ export const fetchGameDetails = (id) => async (dispatch) => {
   }
 };
 
+export const fetchGenres = () => async (dispatch) => {
+  try {
+    const response = await axios.get("http://localhost:3001/genres");
+    console.log("API Data:", response.data);
+
+    dispatch({ type: actionTypes.FETCH_GENRES_SUCCESS, payload: response.data });
+  } catch (error) {
+    dispatch({ type: actionTypes.FETCH_GENRES_FAILURE, payload: error.message });
+  }
+};
+
+export const createVideoGame = (gameData) => async (dispatch) => {
+  try {
+    const response = await axios.post("/", gameData);
+    dispatch({
+      type: actionTypes.CREATE_VIDEO_GAME_SUCCESS,
+      payload: response.data,
+    });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.CREATE_VIDEO_GAME_FAILURE,
+      payload: error.message,
+    });
+  }
+};
+
 export const filterByGenre = (genre) => (dispatch) => {
   dispatch({ type: actionTypes.FILTER_BY_GENRE, payload: genre });
 };
