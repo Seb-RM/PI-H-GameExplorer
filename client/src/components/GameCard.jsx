@@ -24,12 +24,12 @@ const GameCard = ({ id, name, image, genres }) => {
 };
 
 GameCard.propTypes = {
-  id: PropTypes.number.isRequired,
+  id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   name: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   genres: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
       name: PropTypes.string.isRequired,
     })
   ).isRequired,

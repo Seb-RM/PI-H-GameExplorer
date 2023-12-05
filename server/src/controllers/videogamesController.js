@@ -62,7 +62,6 @@ const getVideogameById = async (req, res, next) => {
     try {
         const { idVideogame } = req.params;
 
-        // Controlar si la ID es un UUID
         const isUUID = idVideogame.match(
         /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/
         );
@@ -70,11 +69,29 @@ const getVideogameById = async (req, res, next) => {
         if (isUUID) {
         // Buscar en la base de datos
         const existingVideogame = await VideoGame.findByPk(idVideogame, {
-            include: [Genre, Platform],
+            include: [
+                {
+                model: Genre,
+                through: {
+                    attributes: [],
+                },
+                },
+            ],
         });
 
         if (existingVideogame) {
-            res.json(existingVideogame);
+            const filteredVideogame = {
+                id: existingVideogame.id,
+                name: existingVideogame.name,
+                image: existingVideogame.image,
+                releaseDate:existingVideogame.releaseDate,
+                rating:existingVideogame.rating,
+                description:existingVideogame.description,
+                platforms:[existingVideogame.platforms],
+                genres: existingVideogame.Genres.map((genre) => genre.name),
+            };
+            res.json(filteredVideogame);
+            
         } else {
             res
             .status(404)

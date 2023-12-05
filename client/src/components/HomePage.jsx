@@ -29,18 +29,38 @@ const HomePage = () => {
   console.log(game.genres);})
     return (
       <div className="homeContainer">
-        <nav></nav>
+        <div className="homeTitle">
+          <h1>Game Explorer</h1>
+        </div>
+        <nav>
+          <div>
+            <label>Buscar:</label>
+            <input type="search" />
+          </div>
+          <div>
+            <label>Ordenar por genero:</label>
+            <input type="list" />
+          </div>
+          <div>
+            <label>Ordenar por origen:</label>
+            <input type="list" />
+          </div>
+          <div>
+            <label>Ordenar por nombre:</label>
+            <input type="button" value="Ascendente" />
+            <input type="button" value="Descendente" />
+          </div>
+        </nav>
         <main>
-          <h1>Main section</h1>
           <section className="cardsContainer">
             {videoGames.map((game, index) => (
-            <GameCard
-              key={index} /* Pasa las propiedades del videojuego */
-              id={game.id}
-              name={game.name}
-              image={game.image}
-              genres={game.genres}
-            />
+              <GameCard
+                key={index}
+                id={game.id}
+                name={game.name}
+                image={game.image}
+                genres={game.genres}
+              />
             ))}
           </section>
           <div></div>
