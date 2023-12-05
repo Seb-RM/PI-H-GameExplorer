@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../styles/GameFormPage.css"
 import { useDispatch, useSelector } from "react-redux";
-import { fetchGenres } from "../redux/actions/videoGamesActions";
+import { fetchGenres, createVideoGame } from "../redux/actions/videoGamesActions";
 
 const initialGameData = {
     name: "",
@@ -17,7 +17,10 @@ const initialErrors = {};
 
 const GameFormPage=()=>{
 
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
     const dispatch = useDispatch();
+
     const { genres } = useSelector((state) => state.gameStates);
 
     useEffect(() => {
@@ -28,8 +31,6 @@ const GameFormPage=()=>{
     const [errors, setErrors] = useState(initialErrors);
 
     const isValidUrl = (url) => {
-      // Puedes implementar una lógica más robusta para validar URLs
-      // Esta es solo una verificación básica
         return url.startsWith("http://") || url.startsWith("https://");
     };
 
@@ -106,23 +107,38 @@ const GameFormPage=()=>{
     });
   };
   console.log(gameData);
-  
-    const handleSubmit = (event) => {
+
+    const handleSubmit = async (event) => {
       event.preventDefault();
 
       const newErrors = validateForm();
 
       if (Object.keys(newErrors).length === 0) {
-        // Lógica para enviar el formulario (puede ser una llamada a una acción de Redux o una solicitud HTTP)
 
-        // Después de enviar el formulario, puedes reiniciar los valores del estado
-        setGameData(initialGameData);
-        setErrors({});
+        try {
+          // Lógica para enviar el formulario (puede ser una llamada a una acción de Redux o una solicitud HTTP)
+          await dispatch(createVideoGame(gameData));
+          // Después de enviar el formulario, puedes reiniciar los valores del estado
+
+          setGameData(initialGameData);
+          setErrors({});
+
+          setFormSubmitted(true);
+
+          setTimeout(() => {
+
+            setFormSubmitted(false);
+
+          }, 5000);
+
+        } catch (error) {
+          setErrors({ serverError: "Error al enviar el formulario" });
+        }
       } else {
         setErrors(newErrors);
       }
     };
-
+    console.log(gameData);
     return (
       <div className="formContainer">
         <div>
@@ -206,7 +222,7 @@ const GameFormPage=()=>{
                   type="checkbox"
                   id={genre.id}
                   name="genres"
-                  value={genre.id}
+                  value={genre.name}
                   onChange={handleInputChange}
                 />
                 <label htmlFor={genre.id}>{genre.name}</label>
@@ -225,6 +241,7 @@ const GameFormPage=()=>{
             {errors.description && <p>{errors.description}</p>}
           </div>
           <button type="submit">Agregar Juego</button>
+          {formSubmitted && <p>¡Formulario enviado exitosamente!</p>}
         </form>
       </div>
     );

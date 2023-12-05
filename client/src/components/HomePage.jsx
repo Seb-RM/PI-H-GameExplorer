@@ -33,9 +33,9 @@ const HomePage = () => {
         <main>
           <h1>Main section</h1>
           <section className="cardsContainer">
-            {videoGames.map((game) => (
+            {videoGames.map((game, index) => (
             <GameCard
-              key={game.id} /* Pasa las propiedades del videojuego */
+              key={index} /* Pasa las propiedades del videojuego */
               id={game.id}
               name={game.name}
               image={game.image}

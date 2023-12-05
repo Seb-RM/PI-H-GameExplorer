@@ -46,7 +46,8 @@ export const fetchGenres = () => async (dispatch) => {
 
 export const createVideoGame = (gameData) => async (dispatch) => {
   try {
-    const response = await axios.post("/", gameData);
+    const response = await axios.post("http://localhost:3001/videogames",gameData);
+
     dispatch({
       type: actionTypes.CREATE_VIDEO_GAME_SUCCESS,
       payload: response.data,

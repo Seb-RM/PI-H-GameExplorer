@@ -1,6 +1,6 @@
 //models/index.js
 import Genre from "./genreModel.js";
-import Platform from "./platformModel.js";
+// import Platform from "./platformModel.js";
 import VideoGame from "./videogameModel.js";
 
 
@@ -14,14 +14,14 @@ Genre.belongsToMany(VideoGame, {
     timestamps: false,
 });
 
-// Relación muchos a muchos entre VideoGame y Platform
-VideoGame.belongsToMany(Platform, {
-    through: "VideoGamePlatforms",
-    timestamps: false,
-});
-Platform.belongsToMany(VideoGame, {
-    through: "VideoGamePlatforms",
-    timestamps: false,
-});
 
-export {  Genre, Platform, VideoGame };
+// VideoGame.belongsToMany(Platform, {
+//     through: "VideoGamePlatforms",
+//     timestamps: false,
+// });
+// Platform.belongsToMany(VideoGame, {
+//     through: "VideoGamePlatforms",
+//     timestamps: false,
+// });
+
+export {  Genre, VideoGame };

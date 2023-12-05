@@ -1,41 +1,57 @@
 import axios from "axios";
-import { Genre, Platform, VideoGame } from "../models/index.js";
+import { Genre, VideoGame } from "../models/index.js";
 import { Op } from "sequelize";
 import "dotenv/config";
 
 const getVideogames = async (req, res, next) => {
     try {
       // Obtener videojuegos de la base de datos
-        const existingVideogames = await VideoGame.findAll({
-            include: [Genre, Platform], // Incluir información de géneros y plataformas asociadas
-        });
+      const existingVideogames = await VideoGame.findAll({
+        include: [
+          {
+            model: Genre,
+            through: {
+              attributes: [], 
+            },
+          },
+        ],
+      });
 
-        // Obtener videojuegos de la API
-        const { API_KEY } = process.env;
-        const apiResponse = await axios.get(
-            `https://api.rawg.io/api/games?key=${API_KEY}`
-        );
-        const videogamesFromAPI = apiResponse.data.results.map(
-            (videogameFromAPI) => ({
-                id: videogameFromAPI.id,
-                name: videogameFromAPI.name,
-                image: videogameFromAPI.background_image,
-                // releaseDate: videogameFromAPI.released,
-                // rating: videogameFromAPI.rating,
-                // description: videogameFromAPI.description_raw,
-                // platforms: videogameFromAPI.platforms.map((platform) => platform.platform.name),
-                genres: videogameFromAPI.genres.map((genre) => genre.name),
-            })
-        );
-        // Combinar videojuegos de la base de datos y la API
-        const allVideogames = [...existingVideogames, ...videogamesFromAPI];
+      const filteredVideogames = existingVideogames.map((videoGame) => {
+        return {
+          id: videoGame.id,
+          name: videoGame.name,
+          image: videoGame.image, 
+          genres: videoGame.Genres.map((genre) => genre.name),
+        };
+      });
 
-        if (allVideogames.length === 0) {
-            // Manejar el caso donde no hay videojuegos
-            return res.json([]);
-        }
+      // Obtener videojuegos de la API
+      const { API_KEY } = process.env;
+      const apiResponse = await axios.get(
+        `https://api.rawg.io/api/games?key=${API_KEY}`
+      );
+      const videogamesFromAPI = apiResponse.data.results.map(
+        (videogameFromAPI) => ({
+          id: videogameFromAPI.id,
+          name: videogameFromAPI.name,
+          image: videogameFromAPI.background_image,
+          // releaseDate: videogameFromAPI.released,
+          // rating: videogameFromAPI.rating,
+          // description: videogameFromAPI.description_raw,
+          // platforms: videogameFromAPI.platforms.map((platform) => platform.platform.name),
+          genres: videogameFromAPI.genres.map((genre) => genre.name),
+        })
+      );
+
+      const allVideogames = [...filteredVideogames, ...videogamesFromAPI];
+
+      if (allVideogames.length === 0) {
         
-        res.json(allVideogames);
+        return res.json([]);
+      }
+
+      res.json(allVideogames);
     } catch (error) {
         next(error);
     }
@@ -170,9 +186,9 @@ const createVideogame = async (req, res, next) => {
         // Validar que genres y platforms sean arreglos con al menos un elemento
         if (
             !Array.isArray(genres) ||
-            genres.length === 0 ||
-            !Array.isArray(platforms) ||
-            platforms.length === 0
+            genres.length === 0
+            // !Array.isArray(platforms) ||
+            // platforms.length === 0
         ) {
             return res.status(400).json({
             message: "Se debe proporcionar al menos un género y una plataforma.",
@@ -181,14 +197,14 @@ const createVideogame = async (req, res, next) => {
 
         // Verificar si los géneros y plataformas proporcionados existen en la base de datos
         const existingGenres = await Genre.findAll({ where: { name: genres } });
-        const existingPlatforms = await Platform.findAll({
-            where: { name: platforms },
-        });
+        // const existingPlatforms = await Platform.findAll({
+        //     where: { name: platforms },
+        // });
 
         // Validar que todos los géneros y plataformas proporcionados existan
         if (
-            existingGenres.length !== genres.length ||
-            existingPlatforms.length !== platforms.length
+            existingGenres.length !== genres.length 
+            // || existingPlatforms.length !== platforms.length
         ) {
             return res.status(400).json({
             message:
@@ -203,11 +219,12 @@ const createVideogame = async (req, res, next) => {
             image,
             releaseDate,
             rating,
+            platforms
         });
 
         // Relacionar el videojuego con sus géneros y plataformas
         await newVideogame.addGenres(existingGenres);
-        await newVideogame.addPlatforms(existingPlatforms);
+        // await newVideogame.addPlatforms(existingPlatforms);
         
         res.status(201).json(newVideogame);
     } catch (error) {

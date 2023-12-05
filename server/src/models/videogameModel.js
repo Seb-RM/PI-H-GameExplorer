@@ -43,6 +43,9 @@ const VideoGame = sequelize.define(
             max: 5.0, // No puede ser mayor a 5.0
         },
         },
+        platforms: {
+        type: DataTypes.STRING,
+        },
     },
     {
         hooks: {

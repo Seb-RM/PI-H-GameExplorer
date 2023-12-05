@@ -4,8 +4,10 @@ import sequelize from "./src/DB_connection.js";
 
 const { PORT } = process.env;
 
-
-sequelize.sync({ force: true }).then(() => {
+// {
+//   force: true;
+// }
+sequelize.sync().then(() => {
     server.listen(PORT, () => {
         console.log(`Servidor funcionando en puerto: ${PORT}`);
     });
