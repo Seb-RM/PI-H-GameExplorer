@@ -80,6 +80,11 @@ export const filterVideoGamesByOrigin = (origin) => (dispatch) => {
   dispatch({ type: actionTypes.FILTER_VIDEO_GAMES_BY_ORIGIN, payload: origin });
 };
 
+export const updateVideoGames = (games) => ({
+  type: actionTypes.UPDATE_VIDEO_GAMES,
+  payload: games,
+});
+
 export const paginate = (page) => (dispatch) => {
   dispatch({ type: actionTypes.PAGINATE, payload: page });
 };

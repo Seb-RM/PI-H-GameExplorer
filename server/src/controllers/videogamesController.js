@@ -30,7 +30,7 @@ const getVideogames = async (req, res, next) => {
       // Obtener videojuegos de la API
       const { API_KEY } = process.env;
       const apiResponse = await axios.get(
-        `https://api.rawg.io/api/games?key=${API_KEY}`
+        `https://api.rawg.io/api/games?key=${API_KEY}&page_size=100`
       );
       const videogamesFromAPI = apiResponse.data.results.map(
         (videogameFromAPI) => ({

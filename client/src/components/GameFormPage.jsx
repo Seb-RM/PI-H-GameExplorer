@@ -116,9 +116,8 @@ const GameFormPage=()=>{
       if (Object.keys(newErrors).length === 0) {
 
         try {
-          // Lógica para enviar el formulario (puede ser una llamada a una acción de Redux o una solicitud HTTP)
-          await dispatch(createVideoGame(gameData));
-          // Después de enviar el formulario, puedes reiniciar los valores del estado
+          
+          dispatch(createVideoGame(gameData));
 
           setGameData(initialGameData);
           setErrors({});

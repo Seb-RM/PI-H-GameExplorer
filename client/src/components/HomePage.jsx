@@ -1,28 +1,34 @@
 import GameCard from "./GameCard.jsx";
-import { useEffect,useState } from "react";
-import { fetchVideoGames, sortVideoGamesByName, sortVideoGamesByRating, filterVideoGamesByGenre, fetchGenres } from "../redux/actions/videoGamesActions.js";
+import { useEffect, useState } from "react";
+import { fetchVideoGames, sortVideoGamesByName, sortVideoGamesByRating, filterVideoGamesByGenre, fetchGenres,filterVideoGamesByOrigin, updateVideoGames } from "../redux/actions/videoGamesActions.js";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles/HomePage.css"
 
 const HomePage = () => {
 
     const dispatch = useDispatch();
+
     const { videoGames, loading, error } = useSelector(
       (state) => {console.log("State:",state)
         return state.gameStates}
     );
       
     const { genres } = useSelector((state) => state.gameStates);
-    
-    const [selectedGenre, setSelectedGenre] = useState("");
 
+    const { selectedOrigin, selectedGenre, filteredGames, originalVideoGames } = useSelector((state) => state.gameStates);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    
+    useEffect(() => {
+      dispatch(fetchVideoGames())
+    }, [dispatch]);
+    
+    useEffect(() => {
+      dispatch(updateVideoGames(filteredGames));
+    }, [dispatch, filteredGames]);
+    
     useEffect(() => {
       dispatch(fetchGenres());
-    }, [dispatch]);
-
-
-    useEffect(() => {
-      dispatch(fetchVideoGames());
     }, [dispatch]);
 
     if (loading) {
@@ -32,11 +38,16 @@ const HomePage = () => {
     if (error) {
       return <p>Error: {error}</p>;
     }
-    console.log(videoGames);
-    videoGames.map((game)=>{
-      console.log(game.id);
-    console.log(game.name);
-  console.log(game.genres);})
+
+     const elementsPerPage = 15;
+     const totalElements = videoGames.length;
+     const totalPages = Math.ceil(totalElements / elementsPerPage);
+
+     console.log(totalElements);
+     console.log(totalPages)
+     const startIndex = (currentPage - 1) * elementsPerPage;
+     const endIndex = startIndex + elementsPerPage;
+     const visibleGames = videoGames.slice(startIndex, endIndex);
 
    const handleSortByName = (order) => {
       dispatch(sortVideoGamesByName(order));
@@ -46,21 +57,27 @@ const HomePage = () => {
       dispatch(sortVideoGamesByRating(order));
     };
 
-    const handleGenreChange = (event) => {
-      setSelectedGenre(event.target.value);
-      console.log("Selected Genre:", event.target.value);
+    const handleFilterByGenre = () => {
+      const { value } = event.target;
+        dispatch(filterVideoGamesByGenre(value));
     };
 
-    const handleFilterByGenre = () => {
-      if (selectedGenre === "All") {
-        
-        dispatch(fetchVideoGames());
-      } else {
-        
-        dispatch(filterVideoGamesByGenre(selectedGenre));
-      }
+    const handleOriginFilterChange = (event) => {
+      const { value } = event.target;
+      dispatch(filterVideoGamesByOrigin(value));
     };
-    
+
+     const handleClearFilters = () => {
+  
+       dispatch(filterVideoGamesByOrigin(''));
+       dispatch(filterVideoGamesByGenre("all")); 
+      dispatch(updateVideoGames(originalVideoGames));
+     };
+
+     const handlePageChange = (newPage) => {
+       setCurrentPage(newPage);
+     };
+
     return (
       <div className="homeContainer">
         <div className="homeTitle">
@@ -73,26 +90,22 @@ const HomePage = () => {
           </div>
           <div>
             <label htmlFor="genres">Filtrar por género:</label>
-            <input
-              list="genreList"
-              id="genres"
-              name="genres"
-              value={selectedGenre}
-              onChange={handleGenreChange}
-            />
-            <datalist id="genreList">
-              <option value="All" />
+            <select value={selectedGenre} onChange={handleFilterByGenre}>
+              <option value="all">Todos</option>
               {genres.map((genre) => (
                 <option key={genre.id} value={genre.name}>
                   {genre.name}
                 </option>
               ))}
-            </datalist>
-            <button onClick={handleFilterByGenre}>Filtrar</button>
+            </select>
           </div>
           <div>
             <label>Ordenar por origen:</label>
-            <input type="list" />
+            <select value={selectedOrigin} onChange={handleOriginFilterChange}>
+              <option value="all">Todos</option>
+              <option value="api">API</option>
+              <option value="database">Base de datos</option>
+            </select>
           </div>
           <div>
             <label>Ordenar por nombre:</label>
@@ -110,10 +123,11 @@ const HomePage = () => {
               Descendente
             </button>
           </div>
+          <button onClick={handleClearFilters}>Limpiar Filtros</button>
         </nav>
         <main>
           <section className="cardsContainer">
-            {videoGames.map((game, index) => (
+            {visibleGames.map((game, index) => (
               <GameCard
                 key={index}
                 id={game.id}
@@ -125,6 +139,15 @@ const HomePage = () => {
           </section>
           <div></div>
         </main>
+        <div>
+        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+          Anterior
+        </button>
+        <span>{currentPage}</span>
+        <button onClick={() => handlePageChange(currentPage + 1)} disabled={endIndex >= videoGames.length}>
+          Siguiente
+        </button>
+      </div>
       </div>
     );
 };

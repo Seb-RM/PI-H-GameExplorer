@@ -1,4 +1,3 @@
-// videoGameReducer.js
 import * as actionTypes from "../actions/actions-types.js";
 
 const initialState = {
@@ -7,6 +6,10 @@ const initialState = {
     gameDetails: null,
     loading: true,
     error: null,
+    filteredGames: [],
+    selectedOrigin: "all",
+    selectedGenre: "all",
+    originalVideoGames: [],
 };
 
 const videoGameReducer = (state = initialState, action) => {
@@ -15,6 +18,7 @@ const videoGameReducer = (state = initialState, action) => {
         return {
           ...state,
           videoGames: action.payload,
+          originalVideoGames: action.payload,
           loading: false,
           error: null,
         };
@@ -73,7 +77,7 @@ const videoGameReducer = (state = initialState, action) => {
         };
       }
 
-      case actionTypes.SORT_VIDEO_GAMES_BY_RATING:{
+      case actionTypes.SORT_VIDEO_GAMES_BY_RATING: {
         const sortedByRating = [...state.videoGames].sort((gameA, gameB) => {
           const ratingA = parseFloat(gameA.rating);
           const ratingB = parseFloat(gameB.rating);
@@ -86,29 +90,61 @@ const videoGameReducer = (state = initialState, action) => {
           ...state,
           videoGames: sortedByRating,
         };
-    }
+      }
 
-     case actionTypes.FILTER_VIDEO_GAMES_BY_GENRE:{
-      const genre = action.payload;
-      console.log(genre)
-      const filteredGames = state.videoGames.filter((game) => {
-        
-        return game.genres.includes(genre);
-      });
+      case actionTypes.FILTER_VIDEO_GAMES_BY_GENRE: {
+        const genre = action.payload;
+        console.log(genre);
+        const filteredGames = state.videoGames.filter((game) => {
+          return game.genres.includes(genre);
+        });
+        if(genre === "all"){
+            return {
+                ...state,
+                videoGameReducer: state.videoGames,
+            }
+        }
+        return {
+          ...state,
+          videoGames: filteredGames,
+        };
+      }
+
+      case actionTypes.FILTER_VIDEO_GAMES_BY_ORIGIN:{
+        const  origin = action.payload;
+        console.log(origin)
+        console.log(initialState.filteredGames);
+        if (origin === "api") {
+          return {
+            ...state,
+            filteredGames: state.videoGames.filter(
+              (game) => game.id.length !== 36
+            ),
+            selectedOrigin: "api",
+          };
+        } else if (origin === "database") {
+          
+          return {
+            ...state,
+            filteredGames: state.videoGames.filter(
+              (game) => game.id.length === 36
+            ),
+            selectedOrigin: "database",
+          };
+        } else {
+          return {
+            ...state,
+            filteredGames: state.videoGames,
+            selectedOrigin: "all",
+          };
+        }
+    }
+    
+    case actionTypes.UPDATE_VIDEO_GAMES:
       return {
         ...state,
-        videoGames: filteredGames,
+        videoGames: action.payload,
       };
-    }
-
-
-      // case actionTypes.ORDER_BY:
-      // return {
-      //     ...state,
-      //     sortBy: action.payload.sortBy,
-      //     sortOrder: action.payload.sortOrder,
-      //     currentPage: 1,
-      // };
 
       // case actionTypes.PAGINATE:
       // return {
@@ -119,6 +155,7 @@ const videoGameReducer = (state = initialState, action) => {
       default:
         return state;
     }
+    
 };
 
 export default videoGameReducer;
