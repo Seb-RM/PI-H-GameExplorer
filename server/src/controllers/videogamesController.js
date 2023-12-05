@@ -21,6 +21,7 @@ const getVideogames = async (req, res, next) => {
         return {
           id: videoGame.id,
           name: videoGame.name,
+          rating: videoGame.rating,
           image: videoGame.image, 
           genres: videoGame.Genres.map((genre) => genre.name),
         };
@@ -35,6 +36,7 @@ const getVideogames = async (req, res, next) => {
         (videogameFromAPI) => ({
           id: videogameFromAPI.id,
           name: videogameFromAPI.name,
+          rating: videogameFromAPI.rating,
           image: videogameFromAPI.background_image,
           // releaseDate: videogameFromAPI.released,
           // rating: videogameFromAPI.rating,

@@ -60,12 +60,24 @@ export const createVideoGame = (gameData) => async (dispatch) => {
   }
 };
 
-export const filterByGenre = (genre) => (dispatch) => {
-  dispatch({ type: actionTypes.FILTER_BY_GENRE, payload: genre });
+export const sortVideoGamesByName = (order) => ({
+  type: actionTypes.SORT_VIDEO_GAMES_BY_NAME, payload: order,
+});
+
+export const sortVideoGamesByRating = (order) => {
+  return {
+    type: actionTypes.SORT_VIDEO_GAMES_BY_RATING,
+    payload: order,
+  };
 };
 
-export const orderBy = (sortBy, sortOrder) => (dispatch) => {
-  dispatch({ type: actionTypes.ORDER_BY, payload: { sortBy, sortOrder } });
+export const filterVideoGamesByGenre = (genre) => (dispatch) => {
+  console.log(genre);
+  dispatch({ type: actionTypes.FILTER_VIDEO_GAMES_BY_GENRE, payload: genre });
+};
+
+export const filterVideoGamesByOrigin = (origin) => (dispatch) => {
+  dispatch({ type: actionTypes.FILTER_VIDEO_GAMES_BY_ORIGIN, payload: origin });
 };
 
 export const paginate = (page) => (dispatch) => {
