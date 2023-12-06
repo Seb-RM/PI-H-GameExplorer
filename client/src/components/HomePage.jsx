@@ -16,90 +16,90 @@ import { Link } from "react-router-dom";
 
 const HomePage = () => {
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const { videoGames, loading, error } = useSelector(
-      (state) => {console.log("State:",state)
-        return state.gameStates}
-    );
-      
-    const { genres } = useSelector((state) => state.gameStates);
-
-    const { selectedOrigin, selectedGenre, filteredGames, originalVideoGames } = useSelector((state) => state.gameStates);
-
-    const [currentPage, setCurrentPage] = useState(1);
-
-    const [searchTerm, setSearchTerm] = useState("");
+  const { videoGames, loading, error } = useSelector(
+    (state) => {console.log("State:",state)
+      return state.gameStates}
+  );
     
-    useEffect(() => {
-      dispatch(fetchVideoGames())
-    }, [dispatch]);
+  const { genres } = useSelector((state) => state.gameStates);
+
+  const { selectedOrigin, selectedGenre, filteredGames, originalVideoGames } = useSelector((state) => state.gameStates);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [searchTerm, setSearchTerm] = useState("");
     
-    useEffect(() => {
-      dispatch(updateVideoGames(filteredGames));
-    }, [dispatch, filteredGames]);
-    
-    useEffect(() => {
-      dispatch(fetchGenres());
-    }, [dispatch]);
-
-    if (loading) {
-      return <p>Cargando...</p>;
-    }
-
-    if (error) {
-      return <p>Error: {error}</p>;
-    }
-
-     const elementsPerPage = 15;
-     const totalElements = videoGames.length;
-     const totalPages = Math.ceil(totalElements / elementsPerPage);
-
-     console.log(totalElements);
-     console.log(totalPages)
-     const startIndex = (currentPage - 1) * elementsPerPage;
-     const endIndex = startIndex + elementsPerPage;
-     const visibleGames = videoGames.slice(startIndex, endIndex);
-
-   const handleSortByName = (order) => {
-      dispatch(sortVideoGamesByName(order));
-   };
-
-    const handleSortByRating = (order) => {
-      dispatch(sortVideoGamesByRating(order));
-    };
-
-    const handleFilterByGenre = () => {
-      const { value } = event.target;
-        dispatch(filterVideoGamesByGenre(value));
-    };
-
-    const handleOriginFilterChange = (event) => {
-      const { value } = event.target;
-      dispatch(filterVideoGamesByOrigin(value));
-    };
-
-     const handleClearFilters = () => {
+  useEffect(() => {
+    dispatch(fetchVideoGames())
+  }, [dispatch]);
   
-       dispatch(filterVideoGamesByOrigin(''));
-       dispatch(filterVideoGamesByGenre("all")); 
-      dispatch(updateVideoGames(originalVideoGames));
-     };
+  useEffect(() => {
+    dispatch(updateVideoGames(filteredGames));
+  }, [dispatch, filteredGames]);
+  
+  useEffect(() => {
+    dispatch(fetchGenres());
+  }, [dispatch]);
 
-     const handlePageChange = (newPage) => {
-       setCurrentPage(newPage);
-     };
+  if (loading) {
+    return <p>Cargando...</p>;
+  }
 
-     const handleSearch = () => {
-       dispatch(filterVideoGamesByName(searchTerm));
-      //  setCurrentPage(1);
-     };
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
-     const handleClearSearch = () => {
-       dispatch(fetchVideoGames());
-       setSearchTerm("");
-       setCurrentPage(1);
-     };
+  const elementsPerPage = 15;
+  const totalElements = videoGames.length;
+  const totalPages = Math.ceil(totalElements / elementsPerPage);
+
+  console.log(totalElements);
+  console.log(totalPages)
+  const startIndex = (currentPage - 1) * elementsPerPage;
+  const endIndex = startIndex + elementsPerPage;
+  const visibleGames = videoGames.slice(startIndex, endIndex);
+
+  const handleSortByName = (order) => {
+      dispatch(sortVideoGamesByName(order));
+  };
+
+  const handleSortByRating = (order) => {
+    dispatch(sortVideoGamesByRating(order));
+  };
+
+  const handleFilterByGenre = () => {
+    const { value } = event.target;
+      dispatch(filterVideoGamesByGenre(value));
+  };
+
+  const handleOriginFilterChange = (event) => {
+    const { value } = event.target;
+    dispatch(filterVideoGamesByOrigin(value));
+  };
+
+  const handleClearFilters = () => {
+
+    dispatch(filterVideoGamesByOrigin(''));
+    dispatch(filterVideoGamesByGenre("all")); 
+    dispatch(updateVideoGames(originalVideoGames));
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const handleSearch = () => {
+    dispatch(filterVideoGamesByName(searchTerm));
+  //  setCurrentPage(1);
+  };
+
+  const handleClearSearch = () => {
+    dispatch(fetchVideoGames());
+    setSearchTerm("");
+    setCurrentPage(1);
+  };
 
     return (
       <div className="homeContainer">

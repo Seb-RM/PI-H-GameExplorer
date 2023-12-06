@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import { Link } from "react-router-dom";
-import styles from "./LandingPage.module.css"; // Asegúrate de tener un archivo CSS para los estilos
+import styles from "./LandingPage.module.css";
 
 const LandingPage = () => {
     return (
@@ -9,8 +9,10 @@ const LandingPage = () => {
             <div className={styles.marquee}>
                 <div className={styles.marqueeGroup}>
                     <span>/ Gracias por visitar Game Explorer /</span>
+                    <span>/ Gracias por visitar Game Explorer /</span>
                 </div>
                 <div className={styles.marqueeGroup} aria-hidden="true">
+                    <span>/ Gracias por visitar Game Explorer /</span>
                     <span>/ Gracias por visitar Game Explorer /</span>
                 </div>
             </div>
