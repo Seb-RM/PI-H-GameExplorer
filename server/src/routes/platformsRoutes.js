@@ -1,4 +1,3 @@
-// routes/platformRoutes.js
 import express from "express";
 import getPlatforms from "../controllers/platformsController.js";
 

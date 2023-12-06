@@ -1,4 +1,3 @@
-// routes/genreRoutes.js
 import express from "express";
 import getGenres  from "../controllers/genresController.js";
 
