@@ -98,11 +98,11 @@ const videoGameReducer = (state = initialState, action) => {
         const filteredGames = state.videoGames.filter((game) => {
           return game.genres.includes(genre);
         });
-        if(genre === "all"){
-            return {
-                ...state,
-                videoGameReducer: state.videoGames,
-            }
+        if (genre === "all") {
+          return {
+            ...state,
+            videoGameReducer: state.videoGames,
+          };
         }
         return {
           ...state,
@@ -110,9 +110,9 @@ const videoGameReducer = (state = initialState, action) => {
         };
       }
 
-      case actionTypes.FILTER_VIDEO_GAMES_BY_ORIGIN:{
-        const  origin = action.payload;
-        console.log(origin)
+      case actionTypes.FILTER_VIDEO_GAMES_BY_ORIGIN: {
+        const origin = action.payload;
+        console.log(origin);
         console.log(initialState.filteredGames);
         if (origin === "api") {
           return {
@@ -123,7 +123,6 @@ const videoGameReducer = (state = initialState, action) => {
             selectedOrigin: "api",
           };
         } else if (origin === "database") {
-          
           return {
             ...state,
             filteredGames: state.videoGames.filter(
@@ -138,19 +137,24 @@ const videoGameReducer = (state = initialState, action) => {
             selectedOrigin: "all",
           };
         }
-    }
-    
-    case actionTypes.UPDATE_VIDEO_GAMES:
-      return {
-        ...state,
-        videoGames: action.payload,
-      };
+      }
 
-      // case actionTypes.PAGINATE:
-      // return {
-      //     ...state,
-      //     currentPage: action.payload,
-      // };
+      case actionTypes.UPDATE_VIDEO_GAMES:
+        return {
+          ...state,
+          videoGames: action.payload,
+        };
+
+      case actionTypes.FILTER_VIDEO_GAMES_BY_NAME: {
+        const name = action.payload.toLowerCase();
+        const filteredGames = state.videoGames.filter((game) => {
+          return game.name.toLowerCase().includes(name);
+        });
+        return {
+          ...state,
+          videoGames: filteredGames,
+        };
+      }
 
       default:
         return state;

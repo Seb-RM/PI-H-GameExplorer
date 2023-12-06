@@ -1,8 +1,18 @@
 import GameCard from "./GameCard.jsx";
 import { useEffect, useState } from "react";
-import { fetchVideoGames, sortVideoGamesByName, sortVideoGamesByRating, filterVideoGamesByGenre, fetchGenres,filterVideoGamesByOrigin, updateVideoGames } from "../redux/actions/videoGamesActions.js";
+import {
+  fetchVideoGames,
+  sortVideoGamesByName,
+  sortVideoGamesByRating,
+  filterVideoGamesByGenre,
+  fetchGenres,
+  filterVideoGamesByOrigin,
+  updateVideoGames,
+  filterVideoGamesByName,
+} from "../redux/actions/videoGamesActions.js";
 import { useDispatch, useSelector } from "react-redux";
 import "../styles/HomePage.css"
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
 
@@ -18,6 +28,8 @@ const HomePage = () => {
     const { selectedOrigin, selectedGenre, filteredGames, originalVideoGames } = useSelector((state) => state.gameStates);
 
     const [currentPage, setCurrentPage] = useState(1);
+
+    const [searchTerm, setSearchTerm] = useState("");
     
     useEffect(() => {
       dispatch(fetchVideoGames())
@@ -78,6 +90,17 @@ const HomePage = () => {
        setCurrentPage(newPage);
      };
 
+     const handleSearch = () => {
+       dispatch(filterVideoGamesByName(searchTerm));
+      //  setCurrentPage(1);
+     };
+
+     const handleClearSearch = () => {
+       dispatch(fetchVideoGames());
+       setSearchTerm("");
+       setCurrentPage(1);
+     };
+
     return (
       <div className="homeContainer">
         <div className="homeTitle">
@@ -85,8 +108,15 @@ const HomePage = () => {
         </div>
         <nav>
           <div>
-            <label>Buscar:</label>
-            <input type="search" />
+            <label></label>
+            <input
+              type="text"
+              placeholder="Buscar por nombre..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button onClick={handleSearch}>Buscar</button>
+            <button onClick={handleClearSearch}>Limpiar Búsqueda</button>
           </div>
           <div>
             <label htmlFor="genres">Filtrar por género:</label>
@@ -124,6 +154,7 @@ const HomePage = () => {
             </button>
           </div>
           <button onClick={handleClearFilters}>Limpiar Filtros</button>
+          <Link to="/gameForm"><button>Crear Video Juego</button></Link>
         </nav>
         <main>
           <section className="cardsContainer">
@@ -140,14 +171,18 @@ const HomePage = () => {
           <div></div>
         </main>
         <div>
-        <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
-          Anterior
-        </button>
-        <span>{currentPage}</span>
-        <button onClick={() => handlePageChange(currentPage + 1)} disabled={endIndex >= videoGames.length}>
-          Siguiente
-        </button>
-      </div>
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}>
+            Anterior
+          </button>
+          <span>{currentPage}</span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={endIndex >= videoGames.length}>
+            Siguiente
+          </button>
+        </div>
       </div>
     );
 };

@@ -5,7 +5,7 @@ import "dotenv/config";
 
 const getVideogames = async (req, res, next) => {
     try {
-      // Obtener videojuegos de la base de datos
+
       const existingVideogames = await VideoGame.findAll({
         include: [
           {
@@ -27,7 +27,7 @@ const getVideogames = async (req, res, next) => {
         };
       });
 
-      // Obtener videojuegos de la API
+      
       const { API_KEY } = process.env;
       const apiResponse = await axios.get(
         `https://api.rawg.io/api/games?key=${API_KEY}&page_size=100`
@@ -69,7 +69,7 @@ const getVideogameById = async (req, res, next) => {
         );
 
         if (isUUID) {
-        // Buscar en la base de datos
+        
         const existingVideogame = await VideoGame.findByPk(idVideogame, {
             include: [
                 {
@@ -100,7 +100,7 @@ const getVideogameById = async (req, res, next) => {
             .json({ message: "Video juego no encontrado en la base de datos." });
         }
         } else {
-        // Si no se encuentra en la base de datos, buscar en la API
+        
             const { API_KEY } = process.env;
             const apiResponse = await axios.get(
                 `https://api.rawg.io/api/games/${idVideogame}?key=${API_KEY}`
@@ -137,11 +137,11 @@ const getVideogamesByName = async (req, res, next) => {
         const existingVideogames = await VideoGame.findAll({
             where: {
                 name: {
-                    [Op.iLike]: `%${name}%`, // Búsqueda sin importar mayúsculas o minúsculas
+                    [Op.iLike]: `%${name}%`, 
                 },
             },
-            include: [Genre, Platform], // Incluir información de géneros y plataformas asociadas
-            limit: 15, // Limitar a 15 resultados
+            include: [Genre], 
+            limit: 15, 
         });
 
         const { API_KEY } = process.env;

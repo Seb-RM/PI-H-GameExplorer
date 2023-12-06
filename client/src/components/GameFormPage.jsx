@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "../styles/GameFormPage.css"
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGenres, createVideoGame } from "../redux/actions/videoGamesActions";
+import { Link } from "react-router-dom";
 
 const initialGameData = {
     name: "",
@@ -140,6 +141,9 @@ const GameFormPage=()=>{
     console.log(gameData);
     return (
       <div className="formContainer">
+        <Link to="/home">
+          <button className="">Volver</button>
+        </Link>
         <div>
           <h1>Agrega un nuevo juego</h1>
           <p>
