@@ -14,21 +14,21 @@ const VideoGame = sequelize.define(
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            len: [1, 30], // Longitud entre 1 y 30 caracteres
+            len: [1, 30], 
         },
         },
         description: {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
-            len: [1, 500], // Longitud entre 1 y 500 caracteres
+            len: [1, 500], 
         },
         },
         image: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isUrl: true, // Debe ser una URL
+            isUrl: true, 
         },
         },
         releaseDate: {
@@ -39,8 +39,8 @@ const VideoGame = sequelize.define(
         type: DataTypes.FLOAT,
         allowNull: false,
         validate: {
-            isFloat: true, // Debe ser un número decimal
-            max: 5.0, // No puede ser mayor a 5.0
+            isFloat: true, 
+            max: 5.0, 
         },
         },
         platforms: {
@@ -50,7 +50,6 @@ const VideoGame = sequelize.define(
     {
         hooks: {
         beforeValidate: (videoGame, options) => {
-            // Función para formatear el nombre
             if (videoGame.name) {
             videoGame.name = formatearName(videoGame.name);
             }
@@ -58,9 +57,8 @@ const VideoGame = sequelize.define(
         },
     }
 );
-// Función para formatear el nombre
+
 const formatearName = (name) => {
-  // Convierte la primera letra a mayúscula y el resto a minúscula
     return name.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
