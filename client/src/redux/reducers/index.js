@@ -3,7 +3,6 @@ import { combineReducers } from "redux";
 
 const rootReducer = combineReducers({
     gameStates: videoGamesReducer,
-  
 });
 
 export default rootReducer;
